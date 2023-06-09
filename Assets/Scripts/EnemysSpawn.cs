@@ -16,7 +16,7 @@ public class EnemysSpawn : MonoBehaviour
 
     private IEnumerator SpawnEnemy()
     {
-        int waitingInSeconds = 1;
+        int waitingInSeconds = 2;
 
         _spawnPoints = GameObject.FindGameObjectsWithTag("Respawn");
 
