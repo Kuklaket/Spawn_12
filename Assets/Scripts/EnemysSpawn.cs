@@ -1,15 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using UnityEngine;
 
 public class EnemysSpawn : MonoBehaviour
 {
-    [SerializeField] private GameObject _enemy;
-    [SerializeField] private GameObject _spawnPoint1;
-    [SerializeField] private GameObject _spawnPoint2;
-    [SerializeField] private GameObject _spawnPoint3;
-    [SerializeField] private GameObject _spawnPoint4;
-    [SerializeField] private GameObject _spawnPoint5;
+    [SerializeField] private EnemyCat _enemy;
+
+    private GameObject [] _spawnPoints;
 
     void Start()
     {
@@ -18,23 +16,27 @@ public class EnemysSpawn : MonoBehaviour
 
     private IEnumerator SpawnEnemy()
     {
-        int waitingInSeconds = 2;
+        int waitingInSeconds = 1;
 
-        List<GameObject> _spawnList = new List<GameObject>()
-        { _spawnPoint1, _spawnPoint2, _spawnPoint3, _spawnPoint4, _spawnPoint5};
- 
+        _spawnPoints = GameObject.FindGameObjectsWithTag("Respawn");
+
         while (true)
         {
-            GameObject point = SelectRandomPoint(_spawnList);
-            GameObject newEnemy = Instantiate(_enemy, new Vector2(point.transform.position.x, point.transform.position.y), Quaternion.identity);
-
+            Initialized(_enemy);
             yield return new WaitForSeconds(waitingInSeconds);
         }      
     }
 
-    private GameObject SelectRandomPoint(List<GameObject> spawnList)
+    private void Initialized(EnemyCat newEnemy)
     {
-        int _randomPointNumber = Random.Range(0, spawnList.Count);
+        GameObject point = SelectRandomPoint(_spawnPoints);
+
+        newEnemy = Instantiate(newEnemy, new Vector2(point.transform.position.x, point.transform.position.y), Quaternion.identity);
+    }
+
+    private GameObject SelectRandomPoint(GameObject [] spawnList)
+    {
+        int _randomPointNumber = Random.Range(0, spawnList.Length);
         
         GameObject point = spawnList[_randomPointNumber];
         return point;
