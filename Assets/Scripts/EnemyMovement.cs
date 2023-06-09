@@ -11,14 +11,35 @@ public class EnemyMovement : MonoBehaviour
     private void Start()
     {
         gameObject.SetActive(true);
-        _horizontalMove = Random.RandomRange(-1, 2);
-        _verticalMove = Random.RandomRange(-1, 2);
+        _horizontalMove = ConvertRandomValueInDirectionMove();
+
+
+        _verticalMove = ConvertRandomValueInDirectionMove();
         StartCoroutine(StartLive());
     }
 
     void Update()
     {
         transform.Translate(_speed * Time.deltaTime * _horizontalMove, _speed * Time.deltaTime * _verticalMove, 0);
+    }
+
+    public int ConvertRandomValueInDirectionMove()
+    {
+        int directionCount;
+        int directMove = 1;
+        int reversMove = -1;
+        int countReversMove = 2;
+
+        if (Random.Range(0, countReversMove) == 0)
+        {
+            directionCount = reversMove;
+        }
+        else 
+        {
+            directionCount = directMove;
+        }
+
+        return directionCount;
     }
 
     private IEnumerator StartLive()
