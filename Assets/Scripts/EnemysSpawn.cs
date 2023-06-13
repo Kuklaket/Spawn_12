@@ -1,14 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class EnemysSpawn : MonoBehaviour
 {
     [SerializeField] private EnemyCat _enemy;
-
-    private GameObject [] _spawnPoints;
-
+    
+    private List<Transform> _spawnPoints = new();
+    
     void Start()
     {
         StartCoroutine(SpawnEnemy());       
@@ -17,28 +18,37 @@ public class EnemysSpawn : MonoBehaviour
     private IEnumerator SpawnEnemy()
     {
         int waitingInSeconds = 2;
+        var waitForSeconds = new WaitForSeconds(waitingInSeconds);
 
-        _spawnPoints = GameObject.FindGameObjectsWithTag("Respawn");
-
+        FillList();
+            
         while (true)
         {
             Initialized(_enemy);
-            yield return new WaitForSeconds(waitingInSeconds);
+            yield return waitForSeconds;
         }      
     }
 
     private void Initialized(EnemyCat newEnemy)
     {
-        GameObject point = SelectRandomPoint(_spawnPoints);
+        Transform point = SelectRandomPoint(_spawnPoints);
 
         newEnemy = Instantiate(newEnemy, new Vector2(point.transform.position.x, point.transform.position.y), Quaternion.identity);
     }
 
-    private GameObject SelectRandomPoint(GameObject [] spawnList)
+    private Transform SelectRandomPoint(List<Transform> spawnList)
     {
-        int _randomPointNumber = Random.Range(0, spawnList.Length);
-        
-        GameObject point = spawnList[_randomPointNumber];
+        int _randomPointNumber = Random.Range(0, spawnList.Count);
+
+        Transform point = spawnList[_randomPointNumber];
         return point;
+    }
+
+    private void FillList()
+    {
+       foreach (Transform spawn in transform)
+        {
+            _spawnPoints.Add(spawn);
+        }
     }
 }
