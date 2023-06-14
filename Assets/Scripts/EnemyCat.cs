@@ -17,7 +17,7 @@ public class EnemyCat : MonoBehaviour
         StartCoroutine(StartLive());
     }
 
-    void Update()
+    private void Update()
     {
         transform.Translate(_speed * Time.deltaTime * _horizontalMove, _speed * Time.deltaTime * _verticalMove, 0);
     }
