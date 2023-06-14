@@ -9,8 +9,8 @@ public class EnemysSpawn : MonoBehaviour
     [SerializeField] private EnemyCat _enemy;
     
     private List<Transform> _spawnPoints = new();
-    
-    void Start()
+
+    private void Start()
     {
         StartCoroutine(SpawnEnemy());       
     }
