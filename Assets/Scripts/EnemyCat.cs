@@ -1,18 +1,27 @@
+using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyCat : MonoBehaviour
 {
-    private Vector2 _vectorMove = new Vector2();   
+    private Vector2 _vectorMove;   
     private int _speed = 1;
+    private Coroutine _liveCoroutine;
 
-    private void Start()
+    public event Action<EnemyCat> ReadyForReleased;
+
+    private void OnEnable()
     {
-        gameObject.SetActive(true);
-        ConvertValueInDirection();
+        _liveCoroutine = StartCoroutine(StartLive());
+    }
 
-        StartCoroutine(StartLive());
+    private void OnDisable()
+    {
+        if (_liveCoroutine != null)
+        {
+            StopCoroutine(_liveCoroutine);
+            _liveCoroutine = null;
+        }
     }
 
     private void Update()
@@ -20,46 +29,16 @@ public class EnemyCat : MonoBehaviour
         transform.Translate(_vectorMove.normalized * _speed * Time.deltaTime);
     }
 
-    private void ConvertValueInDirection()
+    public void SetDirection(Vector2 direction)
     {
-        _vectorMove.x = GetDirection();
-
-        do
-        {
-            _vectorMove.y = GetDirection();
-
-        } while (_vectorMove.x == 0 && _vectorMove.y == 0);
-    }
-
-    private int GetDirection()
-    {
-        int directionCount;
-        int directMove = 1;
-        int reversMove = -1;
-        int countReversMove = 2;
-        int randomValue = Random.Range(reversMove, countReversMove);
-
-        if (randomValue == reversMove)
-        {
-            directionCount = reversMove;
-        }
-        else if (randomValue == 0)
-        {
-            directionCount = 0;
-        }
-        else
-        {
-            directionCount = directMove;
-        }
-
-        return directionCount;
+        _vectorMove = direction;
     }
 
     private IEnumerator StartLive()
     {
-        int liveLenght = 3;
-              
+        int liveLenght = 5;
+
         yield return new WaitForSeconds(liveLenght);
-        Destroy(gameObject);
+        ReadyForReleased?.Invoke(this);
     }
 }
