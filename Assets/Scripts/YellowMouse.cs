@@ -1,5 +1,5 @@
 
-public class YellowMouses : Enemy
+public class YellowMouse : Enemy
 {
     private void Awake()
     {
